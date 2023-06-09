@@ -93,6 +93,10 @@ $ yarn add @nestjs/config
 $ yarn add mysql2
 $ yarn add class-validator
 $ yarn add bcrypt
+$ yarn add passport passport-local @nestjs/passport
+$ yarn add express-session
+$ yarn add @types/express-session
+$ yarn add @types/passport
 
 ```
 
