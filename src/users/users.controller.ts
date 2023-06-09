@@ -37,4 +37,11 @@ export class UsersController {
   loginCheck(@Request() req) {
     return req.user;
   }
+
+  @Get('/logout')
+  @UseGuards(AuthenticatedGuard)
+  logout(@Request() req) {
+    req.session.destroy();
+    return { msg: 'session has ended' };
+  }
 }
