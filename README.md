@@ -91,6 +91,8 @@ $ yarn add sequelize sequelize-cli sequelize-typescript
 $ yarn add @nestjs/sequelize
 $ yarn add @nestjs/config
 $ yarn add mysql2
+$ yarn add class-validator
+$ yarn add bcrypt
 
 ```
 
