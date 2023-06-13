@@ -39,7 +39,6 @@ export class UsersController {
   }
 
   @Get('/logout')
-  @UseGuards(AuthenticatedGuard)
   logout(@Request() req) {
     req.session.destroy();
     return { msg: 'session has ended' };
