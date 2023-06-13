@@ -97,6 +97,7 @@ $ yarn add passport passport-local @nestjs/passport
 $ yarn add express-session
 $ yarn add @types/express-session
 $ yarn add @types/passport
+$ yarn add @nestjs/swagger
 
 ```
 
