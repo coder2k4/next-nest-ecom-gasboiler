@@ -82,6 +82,12 @@ $ nest g mo users - создание модуля users
 $ nest g co users - создание контроллера users
 $ nest g s users - создание сервиса users
 
+
+$ npx sequelize-cli init - Sequelize CLI
+$ npx sequelize-cli model:generate --name BoilerParts --attributes name:string  - создаеме модели и миграции
+$ npx sequelize-cli db:migrate  - Запуск миграции
+$ npx sequelize-cli seed:generate --name boiler-parts  - создание сида для заполнения
+$ npx sequelize-cli db:seed:all  - заполняем таблицы
 ```
 
 ## Пакеты которые были использованы в разработке сервера:
@@ -98,6 +104,7 @@ $ yarn add express-session
 $ yarn add @types/express-session
 $ yarn add @types/passport
 $ yarn add @nestjs/swagger
+$ yarn add @faker-js/faker
 
 ```
 
