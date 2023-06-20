@@ -82,9 +82,23 @@ $ nest g mo users - создание модуля users
 $ nest g co users - создание контроллера users
 $ nest g s users - создание сервиса users
 
+$ nest g mo auth 
+$ nest g s auth 
+
+$ nest g mo boiler-parts 
+$ nest g co boiler-parts  
+$ nest g s boiler-parts  
+
+$ nest g mo shopping-cart
+$ nest g co shopping-cart
+$ nest g s shopping-cart
+
+$ nest g mo payment
+$ nest g co payment
+$ nest g s payment
 
 $ npx sequelize-cli init - Sequelize CLI
-$ npx sequelize-cli model:generate --name BoilerParts --attributes name:string  - создаеме модели и миграции
+$ npx sequelize-cli model:generate --name BoilerPartsModel --attributes name:string  - создаеме модели и миграции
 $ npx sequelize-cli db:migrate  - Запуск миграции
 $ npx sequelize-cli seed:generate --name boiler-parts  - создание сида для заполнения
 $ npx sequelize-cli db:seed:all  - заполняем таблицы
@@ -105,6 +119,7 @@ $ yarn add @types/express-session
 $ yarn add @types/passport
 $ yarn add @nestjs/swagger
 $ yarn add @faker-js/faker
+$ yarn add axios
 
 ```
 
