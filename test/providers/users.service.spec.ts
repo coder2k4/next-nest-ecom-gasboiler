@@ -39,7 +39,7 @@ describe('Users Services', () => {
   });
 
   // Проверка на создание пользователя
-  it('should create user by userservice', async () => {
+  it('should create user by userService', async () => {
     const testUser = {
       username: 'testUsername',
       password: 'testPassword',
