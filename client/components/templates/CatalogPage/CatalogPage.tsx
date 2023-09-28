@@ -1,4 +1,4 @@
-import {getBoilerPartsFX} from '@/app/api/boilerParts'
+import {getBoilerPartsFx} from '@/app/api/boilerParts'
 import FilterSelect from '@/components/modules/CatalogPage/FilterSelect'
 import ManufacturersBlock from '@/components/modules/CatalogPage/ManufacturersBlock'
 import {$boilerParts, setBoilerParts,} from '@/context/boilerParts'
@@ -10,21 +10,33 @@ import {useEffect, useState} from 'react'
 import {toast} from 'react-toastify'
 import skeletonStyles from '@/styles/skeleton/index.module.scss'
 import CatalogItem from '@/components/modules/CatalogPage/CatalogItem'
-// import ReactPaginate from 'react-paginate'
-// import {IQueryParams} from '@/types/catalog'
+import ReactPaginate from 'react-paginate'
+import {useRouter} from "next/router";
+import {IQueryParams} from "@/types/catalog";
+import {IBoilerParts} from "@/types/boilerparts";
+
+
 // import CatalogFilters from '@/components/modules/CatalogPage/CatalogFilters'
 // import FilterSvg from '@/components/elements/FilterSvg/FilterSvg'
 
 const CatalogPage = (
-    // {query}: { query: IQueryParams }
+    {query}: { query: IQueryParams }
 ) => {
     const mode = useStore($mode)
     const darkModeClass = mode === 'dark' ? `${styles.dark_mode}` : ''
-
+    const router = useRouter()
 
     const [spinner, setSpinner] = useState(false)
 
     const boilerParts = useStore($boilerParts)
+
+
+    //Pagination
+    const isValidOffset = query.offset && !isNaN(+query.offset) && +query.offset > 0
+    const [currentPage, setCurrentPage] =
+        useState(isValidOffset ? +query.offset - 1 : 0)
+    const pagesCount = Math.ceil(boilerParts.count / 20)
+
 
     useEffect(() => {
         loadBoilerParts().then()
@@ -34,8 +46,39 @@ const CatalogPage = (
 
     const loadBoilerParts = async () => {
         try {
-            const data = await getBoilerPartsFX('/boiler-parts?limit=20&offset=0')
-            setBoilerParts(data)
+            const data = await getBoilerPartsFx('/boiler-parts?limit=20&offset=0')
+
+            if (!isValidOffset) {
+                await router.replace({
+                    query: {
+                        offset: 1
+                    }
+                })
+                resetPagination(data)
+                return
+            }
+
+            if (isValidOffset) {
+                if (+query.offset > Math.ceil(data.count / 20)) {
+                    await router.replace({
+                        query: {
+                            ...query,
+                            offset: 1
+                        }
+                    }, undefined, {shallow: true})
+                    resetPagination(data)
+                    return
+                }
+
+                const offset = +query.offset - 1
+                const result = await getBoilerPartsFx(
+                    `/boiler-parts?limit=20&offset=${offset}`
+                )
+
+                setBoilerParts(result)
+                setCurrentPage(offset)
+
+            }
         } catch (error) {
             toast.error((error as Error).message)
         } finally {
@@ -43,48 +86,54 @@ const CatalogPage = (
         }
     }
 
-    /*
 
     const resetPagination = (data: IBoilerParts) => {
         setCurrentPage(0)
         setBoilerParts(data)
     }
 
-    const handlePageChange = async ({ selected }: { selected: number }) => {
+    const handlePageChange = async ({selected}: { selected: number }) => {
         try {
             setSpinner(true)
             const data = await getBoilerPartsFx('/boiler-parts?limit=20&offset=0')
 
             if (selected > pagesCount) {
-                resetPagination(isFilterInQuery ? filteredBoilerParts : data)
+                resetPagination(data)
+                // resetPagination(isFilterInQuery ? filteredBoilerParts : data)
                 return
             }
 
-            if (isValidOffset && +query.offset > Math.ceil(data.count / 2)) {
-                resetPagination(isFilterInQuery ? filteredBoilerParts : data)
+            if (isValidOffset && +query.offset > Math.ceil(data.count / 20)) {
+                resetPagination(data)
+                // resetPagination(isFilterInQuery ? filteredBoilerParts : data)
                 return
             }
 
-            const { isValidBoilerQuery, isValidPartsQuery, isValidPriceQuery } =
-                checkQueryParams(router)
+            // const {isValidBoilerQuery, isValidPartsQuery, isValidPriceQuery} =
+            //     checkQueryParams(router)
+
+            // const result = await getBoilerPartsFx(
+            //     `/boiler-parts?limit=20&offset=${selected}${
+            //         isFilterInQuery && isValidBoilerQuery
+            //             ? `&boiler=${router.query.boiler}`
+            //             : ''
+            //     }${
+            //         isFilterInQuery && isValidPartsQuery
+            //             ? `&parts=${router.query.parts}`
+            //             : ''
+            //     }${
+            //         isFilterInQuery && isValidPriceQuery
+            //             ? `&priceFrom=${router.query.priceFrom}&priceTo=${router.query.priceTo}`
+            //             : ''
+            //     }`
+            // )
+
 
             const result = await getBoilerPartsFx(
-                `/boiler-parts?limit=20&offset=${selected}${
-                    isFilterInQuery && isValidBoilerQuery
-                        ? `&boiler=${router.query.boiler}`
-                        : ''
-                }${
-                    isFilterInQuery && isValidPartsQuery
-                        ? `&parts=${router.query.parts}`
-                        : ''
-                }${
-                    isFilterInQuery && isValidPriceQuery
-                        ? `&priceFrom=${router.query.priceFrom}&priceTo=${router.query.priceTo}`
-                        : ''
-                }`
+                `/boiler-parts?limit=20&offset=${selected}`
             )
 
-            router.push(
+            await router.push(
                 {
                     query: {
                         ...router.query,
@@ -92,7 +141,7 @@ const CatalogPage = (
                     },
                 },
                 undefined,
-                { shallow: true }
+                {shallow: true}
             )
 
             setCurrentPage(selected)
@@ -104,6 +153,8 @@ const CatalogPage = (
         }
     }
 
+
+    /*
     const resetFilters = async () => {
         try {
             const data = await getBoilerPartsFx('/boiler-parts?limit=20&offset=0')
@@ -188,7 +239,7 @@ const CatalogPage = (
                         <div>
                             тут будут фильтры
                         </div>
-               {/*         <CatalogFilters
+                        {/*         <CatalogFilters
                             // priceRange={priceRange}
                             // setIsPriceRangeChanged={setIsPriceRangeChanged}
                             // setPriceRange={setPriceRange}
@@ -225,7 +276,7 @@ const CatalogPage = (
                             </ul>
                         )}
                     </div>
-                    {/*<ReactPaginate
+                    <ReactPaginate
                         containerClassName={styles.catalog__bottom__list}
                         pageClassName={styles.catalog__bottom__list__item}
                         pageLinkClassName={styles.catalog__bottom__list__item__link}
@@ -234,10 +285,10 @@ const CatalogPage = (
                         breakClassName={styles.catalog__bottom__list__break}
                         breakLinkClassName={`${styles.catalog__bottom__list__break__link} ${darkModeClass}`}
                         breakLabel="..."
-                        // pageCount={pagesCount}
-                        // forcePage={currentPage}
-                        // onPageChange={handlePageChange}
-                    />*/}
+                        pageCount={pagesCount}
+                        forcePage={currentPage}
+                        onPageChange={handlePageChange}
+                    />
                 </div>
             </div>
         </section>

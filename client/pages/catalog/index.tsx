@@ -25,7 +25,7 @@ const Dashboard = ({query}: { query: IQueryParams }) => {
                 <Layout>
                     <main>
                         <CatalogPage
-                            // query={query}
+                            query={query}
                         />
                         {/*    getDefaultTextGenerator={getDefaultTextGenerator}*/}
                         {/*    getTextGenerator={getTextGenerator}*/}
