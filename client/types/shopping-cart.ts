@@ -33,3 +33,4 @@ export interface ICartItemCounterProps {
     increasePrice: VoidFunction
     decreasePrice: VoidFunction
 }
+

@@ -1,9 +1,14 @@
-import {useStore} from "effector-react";
-import {$mode} from "@/context/mode";
+/* eslint-disable @next/next/no-img-element */
+import { $mode } from '@/context/mode'
+import { useStore } from 'effector-react'
+import Link from 'next/link'
+import DeleteSvg from '@/components/elements/DeleteSvg/DeleteSvg'
+import { IShoppingCartItem } from '@/types/shopping-cart'
+import { formatPrice } from '@/utils/common'
+import CartItemCounter from '@/components/elements/CartItemCounter/CartItemCounter'
+import { usePrice } from '@/hooks/usePrice'
 import styles from '@/styles/cartPopup/index.module.scss'
-import Link from "next/link";
-import {IShoppingCartItem} from "@/types/shopping-cart";
-
+import spinnerStyles from '@/styles/spinner/index.module.scss'
 
 const CartPopupItem = ({ item }: { item: IShoppingCartItem }) => {
     const mode = useStore($mode)
