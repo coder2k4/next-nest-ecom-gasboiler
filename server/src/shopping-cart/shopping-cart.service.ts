@@ -38,7 +38,7 @@ export class ShoppingCartService {
     cart.image = JSON.parse(part.images)[0];
     cart.name = part.name;
     cart.total_price = part.price;
-    cart.count += 1;
+    // cart.count += 1;
 
     return cart.save();
   }

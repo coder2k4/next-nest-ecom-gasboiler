@@ -6,6 +6,9 @@ import {$mode} from "@/context/mode";
 import ModeToggler from "@/components/elements/ModeToggler/ModeToggler";
 import SearchInput from "@/components/elements/SearchInput/SearchInput";
 import CartPopup from "@/components/modules/Header/CartPopup/CartPopup";
+import {useEffect} from "react";
+import {useRouter} from "next/router";
+import {setDisableCart} from "@/context/shopping-cart";
 
 const HeaderBottom = () => {
 
@@ -13,6 +16,18 @@ const HeaderBottom = () => {
 
 	const mode = useStore($mode)
 	const darkModeClass = mode === 'dark' ? `${styles.dark_mode}` : ''
+
+	const router = useRouter()
+
+
+	useEffect(() => {
+		if (router.pathname === '/order') {
+			setDisableCart(true)
+			return
+		}
+
+		setDisableCart(false)
+	}, [router.pathname])
 
 	return (
 		<div className={styles.header__bottom}>

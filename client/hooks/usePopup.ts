@@ -1,24 +1,25 @@
 import {useEffect, useState} from "react";
+import {removeClassNamesForOverlayAndBody, toggleClassNamesForOverlayAndBody} from "@/utils/common";
+import {setSearchInputZIndex} from "@/context/header";
 
 export const usePopup = () => {
 
     const [open, setOpen] = useState(false)
 
     const toggleOpen = () => {
-        window.scrollTo(0,0)
-        document.querySelector('.overlay')?.classList.add('open')
-        document.querySelector('.body')?.classList.add('overlay-hidden')
-        setOpen(true)
+        window.scrollTo(0, 0)
+        toggleClassNamesForOverlayAndBody()
+        setOpen(!open)
     }
 
     const closePopup = () => {
-        window.scrollTo(0,0)
-        document.querySelector('.overlay')?.classList.remove('open')
-        document.querySelector('.body')?.classList.remove('overlay-hidden')
+        window.scrollTo(0, 0)
+        removeClassNamesForOverlayAndBody()
+        setSearchInputZIndex(1)
         setOpen(false)
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         const overlay = document.querySelector('.overlay')
         overlay?.addEventListener('click', closePopup)
 
@@ -29,6 +30,6 @@ export const usePopup = () => {
     }, [open])
 
 
-    return { open, toggleOpen, closePopup }
+    return {open, toggleOpen, closePopup}
 
 }

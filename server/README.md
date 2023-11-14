@@ -123,3 +123,14 @@ $ yarn add axios
 
 ```
 
+
+## Инфо по API
+
+http://localhost:3000/swagger
+
+
+## Тестовая карта Юкассы
+https://yookassa.ru/developers/payment-acceptance/testing-and-going-live/testing
+
+```5555555555554477	Mastercard```
+

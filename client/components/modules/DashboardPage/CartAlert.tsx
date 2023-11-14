@@ -1,14 +1,14 @@
 import Link from 'next/link'
-import { useStore } from 'effector-react'
-// import { formatPrice } from '@/utils/common'
-import { ICartAlertProps } from '../../../types/dashboard'
-import { $mode } from '@/context/mode'
-// import { $totalPrice } from '@/context/shopping-cart'
+import {useStore} from 'effector-react'
+import {formatPrice} from '@/utils/common'
+import {ICartAlertProps} from '../../../types/dashboard'
+import {$mode} from '@/context/mode'
+import {$totalPrice} from '@/context/shopping-cart'
 import styles from '@/styles/dashboard/index.module.scss'
 
-const CartAlert = ({ count, closeAlert }: ICartAlertProps) => {
+const CartAlert = ({count, closeAlert}: ICartAlertProps) => {
     const mode = useStore($mode)
-    // const totalPrice = useStore($totalPrice)
+    const totalPrice = useStore($totalPrice)
     const darkModeClass = mode === 'dark' ? `${styles.dark_mode}` : ''
 
     const showCountMessage = (count: string) => {
@@ -29,14 +29,14 @@ const CartAlert = ({ count, closeAlert }: ICartAlertProps) => {
         <span>
           В корзине {count} {showCountMessage(`${count}`)}
         </span>
-                {/*<span>На сумму {formatPrice(totalPrice)} P</span>*/}
-                <span>На сумму 9999 P</span>
+                <span>На сумму {formatPrice(totalPrice)} P</span>
+
             </div>
             <div className={styles.dashboard__alert__right}>
-                <Link href="/order" legacyBehavior passHref>
+                <Link href="/Order" legacyBehavior passHref>
                     <a className={styles.dashboard__alert__btn_cart}>Перейти в корзину</a>
                 </Link>
-                <Link href="/order" legacyBehavior passHref>
+                <Link href="/Order" legacyBehavior passHref>
                     <a className={styles.dashboard__alert__btn_order}>Оформить заказ</a>
                 </Link>
             </div>

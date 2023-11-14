@@ -1,6 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { MakePaymentDto } from './dto/makePayment.dto';
 import axios from 'axios';
+import { CheckPaymentDto } from './dto/checkPayment.dto';
 
 @Injectable()
 export class PaymentService {
@@ -13,10 +14,10 @@ export class PaymentService {
         url: 'https://api.yookassa.ru/v3/payments',
         headers: {
           'Content-Type': 'application/json',
-          'Idempotence-Key': new Date(),
+          'Idempotence-Key': Date.now(),
         },
         auth: {
-          username: 221132,
+          username: '221132',
           password: 'test_6OeLlKAyXC_Eoue_nQhddV8hdljOrbtu5UQnjVUz3-k',
         },
         data: {
@@ -29,13 +30,32 @@ export class PaymentService {
             type: 'redirect',
             return_url: 'http://localhost:3001/order',
           },
-          description: 'Зайказ №1',
+          description: makePaymentDto.description,
         },
       });
 
       return data;
     } catch (e) {
       throw new ForbiddenException(e);
+    }
+  }
+
+  async checkPayment(checkPaymentDto: CheckPaymentDto) {
+    try {
+      console.log('checkPaymentDto.paymentId', checkPaymentDto.paymentId);
+
+      const { data } = await axios({
+        method: 'GET',
+        url: `https://api.yookassa.ru/v3/payments/${checkPaymentDto.paymentId}`,
+        auth: {
+          username: '221132',
+          password: 'test_6OeLlKAyXC_Eoue_nQhddV8hdljOrbtu5UQnjVUz3-k',
+        },
+      });
+
+      return data;
+    } catch (error) {
+      throw new ForbiddenException(error);
     }
   }
 }

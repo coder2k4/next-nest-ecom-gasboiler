@@ -69,27 +69,35 @@ const CatalogPage = (
 
     const loadBoilerParts = async () => {
         try {
+            setSpinner(true)
             const data = await getBoilerPartsFx('/boiler-parts?limit=20&offset=0')
 
             if (!isValidOffset) {
-                await router.replace({
+                router.replace({
                     query: {
-                        offset: 1
-                    }
+                        offset: 1,
+                    },
                 })
+
                 resetPagination(data)
                 return
             }
 
             if (isValidOffset) {
                 if (+query.offset > Math.ceil(data.count / 20)) {
-                    await router.replace({
-                        query: {
-                            ...query,
-                            offset: 1
-                        }
-                    }, undefined, {shallow: true})
-                    resetPagination(data)
+                    router.push(
+                        {
+                            query: {
+                                ...query,
+                                offset: 1,
+                            },
+                        },
+                        undefined,
+                        { shallow: true }
+                    )
+
+                    setCurrentPage(0)
+                    setBoilerParts(isFilterInQuery ? filteredBoilerParts : data)
                     return
                 }
 
@@ -98,10 +106,13 @@ const CatalogPage = (
                     `/boiler-parts?limit=20&offset=${offset}`
                 )
 
-                setBoilerParts(isFilterInQuery ? filteredBoilerParts : result)
                 setCurrentPage(offset)
-
+                setBoilerParts(isFilterInQuery ? filteredBoilerParts : result)
+                return
             }
+
+            setCurrentPage(0)
+            setBoilerParts(isFilterInQuery ? filteredBoilerParts : data)
         } catch (error) {
             toast.error((error as Error).message)
         } finally {

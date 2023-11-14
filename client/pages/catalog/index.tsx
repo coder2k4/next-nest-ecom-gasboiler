@@ -3,13 +3,15 @@ import Layout from "@/components/layout/Layout";
 import {useRedirectByUserCheck} from "@/hooks/useRedirectByUserCheck";
 import CatalogPage from "@/components/templates/CatalogPage/CatalogPage";
 import {IQueryParams} from "@/types/catalog";
+import {useCallback} from "react";
+import Breadcrumbs from "@/components/modules/Breadcrumbs/Breadcrumbs";
 
-const Dashboard = ({query}: { query: IQueryParams }) => {
+const Catalog = ({query}: { query: IQueryParams }) => {
 
     const shouldLoadContent = useRedirectByUserCheck()
 
-    const getDefaultTextGenerator = () => ''
-    const getTextGenerator = () => ''
+    const getDefaultTextGenerator = useCallback(() => 'Каталог', [])
+    const getTextGenerator = useCallback((param: string) => ({}[param]), [])
 
     return (
         <>
@@ -24,14 +26,12 @@ const Dashboard = ({query}: { query: IQueryParams }) => {
             {shouldLoadContent && (
                 <Layout>
                     <main>
-                        <CatalogPage
-                            query={query}
+                        <Breadcrumbs
+                            getDefaultTextGenerator={getDefaultTextGenerator}
+                            getTextGenerator={getTextGenerator}
                         />
-                        {/*    getDefaultTextGenerator={getDefaultTextGenerator}*/}
-                        {/*    getTextGenerator={getTextGenerator}*/}
-                        {/*/>*/}
-
-                        <div className="overlay"/>
+                        <CatalogPage query={query} />
+                        <div className="overlay" />
                     </main>
                 </Layout>
             )}
@@ -50,4 +50,4 @@ export async function getServerSideProps(context: { query: IQueryParams }) {
     }
 }
 
-export default Dashboard
+export default Catalog
